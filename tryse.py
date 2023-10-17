@@ -1,10 +1,34 @@
+from openpyxl import Workbook
+from openpyxl.chart import BarChart, Reference
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #aa = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
 enddict = {}
 data = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я']
 thisdict = {'а': 0, 'б': 0, 'в': 0, 'г': 0, 'д': 0, 'е': 0, 'ё': 0, 'ж': 0, 'з': 0, 'и': 0, 'й': 0, 'к': 0, 'л': 0, 'м': 0, 'н': 0, 'о': 0, 'п': 0, 'р': 0, 'с': 0, 'т': 0, 'у': 0, 'ф': 0, 'х': 0, 'ц': 0, 'ч': 0, 'ш': 0, 'щ': 0, 'ъ': 0, 'ы': 0, 'ь': 0, 'э': 0, 'ю': 0, 'я': 0}
-text ="""
+text = """
 Три девицы под окном
 Пряли поздно вечерком.
 «Кабы я была царица, —
@@ -1001,7 +1025,7 @@ text ="""
 Уложили спать вполпьяна.
 Я там был; мед, пиво пил —
 И усы лишь обмочил.
-      """
+"""                  #input('enter text')
 words_value = 0
 print(len(text))
 for i in text.lower() :
@@ -1047,41 +1071,45 @@ def bar_chart_with_ziro():
 
         except:
             pass
-    return  bar_charts
     print(bar_charts, sep='\n')
+    return  bar_charts
 values = bar_chart_with_ziro()
-treeData = [["Type", "Color", "Height"]]
-
-for i in data:
-    app = [i, 'red', values[i]]
-
-    treeData.append(app)
 
 
 
-from openpyxl import Workbook
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 wb = Workbook()
-ws = wb.active
 
-for row in treeData:
-    ws.append(row)
+wb.create_sheet(title='Первый лист', index=0)
 
-from openpyxl.styles import Font
-ft = Font(bold=True)
+sheet = wb['Первый лист']
+sheet['A1'] = 'Серия 1'
+val = 0
+for i in data:
+    val += 1
+    cell = sheet.cell(row = val , column= 1)
+    cell.value = values[i]
+ 
 
-from openpyxl.chart import BarChart, Reference
 chart = BarChart()
-chart.type = "col"
-chart.title = "Tree Height"
-chart.y_axis.title = 'Height (cm)'
-chart.x_axis.title = 'words calculator'
-chart.legend = None
+chart.title = 'Заголовок'
+data = Reference(sheet,min_col=1, min_row=1 , max_col=1, max_row=33)
 
-data = Reference(ws, min_col=3, min_row=2, max_row=34, max_col=3)
-categories = Reference(ws, min_col=1, min_row=2, max_row=34, max_col=1)
-chart.add_data(data)
-chart.set_categories(categories)
+chart.add_data(data, titles_from_data=True)
 
-
-ws.add_chart(chart, "E1")
-wb.save("TreeData.xlsx")
+sheet.add_chart(chart, 'C2')
+wb.save('example.xlsx')
